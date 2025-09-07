@@ -9,28 +9,28 @@ const Footer = () => {
         <div className="w-4/5">
           <Image className="w-28 md:w-32" src={assets.logo} alt="logo" />
           <p className="mt-6 text-sm">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Senshop est votre boutique en ligne rapide et pratique. Retrouvez une large sélection de
+             produits du quotidien : mode, accessoires, beauté, maison, alimentation, et bien plus encore.
+              Avec notre système QuickCart, commandez en quelques clics, payez facilement (Mobile Money, carte ou espèces)
+               et profitez d’une livraison rapide et sécurisée partout au Sénégal et dans le monde entier.
           </p>
         </div>
 
         <div className="w-1/2 flex items-center justify-start md:justify-center">
           <div>
-            <h2 className="font-medium text-gray-900 mb-5">Company</h2>
+            <h2 className="font-medium text-gray-900 mb-5">Entreprise</h2>
             <ul className="text-sm space-y-2">
               <li>
-                <a className="hover:underline transition" href="#">Home</a>
+                <a className="hover:underline transition" href="#">Accueil</a>
               </li>
               <li>
-                <a className="hover:underline transition" href="#">About us</a>
+                <a className="hover:underline transition" href="#">À propos</a>
               </li>
               <li>
-                <a className="hover:underline transition" href="#">Contact us</a>
+                <a className="hover:underline transition" href="#">Contact</a>
               </li>
               <li>
-                <a className="hover:underline transition" href="#">Privacy policy</a>
+                <a className="hover:underline transition" href="#">Politique de confidentialité</a>
               </li>
             </ul>
           </div>
@@ -38,16 +38,16 @@ const Footer = () => {
 
         <div className="w-1/2 flex items-start justify-start md:justify-center">
           <div>
-            <h2 className="font-medium text-gray-900 mb-5">Get in touch</h2>
+            <h2 className="font-medium text-gray-900 mb-5">Contactez-nous</h2>
             <div className="text-sm space-y-2">
-              <p>+1-234-567-890</p>
+              <p>+221776417418</p>
               <p>amadougayeniang@gmail.com</p>
             </div>
           </div>
         </div>
       </div>
       <p className="py-4 text-center text-xs md:text-sm">
-        Copyright 2025 © Ahmedu Niang All Right Reserved.
+        Droits d’auteur 2025 © Ahmedu Niang. Tous droits réservés.
       </p>
     </footer>
   );

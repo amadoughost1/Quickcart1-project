@@ -7,6 +7,11 @@ const ProductCard = ({ product }) => {
 
     const { currency, router } = useAppContext()
 
+    // Vérifier que le produit et ses images existent
+    if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
+        return null; // Ne pas rendre le composant si les données sont invalides
+    }
+
     return (
         <div
             onClick={() => { router.push('/product/' + product._id); scrollTo(0, 0) }}
@@ -15,7 +20,7 @@ const ProductCard = ({ product }) => {
             <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center">
                 <Image
                     src={product.image[0]}
-                    alt={product.name}
+                    alt={product.name || 'Product image'}
                     className="group-hover:scale-105 transition object-cover w-4/5 h-4/5 md:w-full md:h-full"
                     width={800}
                     height={800}
@@ -52,7 +57,7 @@ const ProductCard = ({ product }) => {
             <div className="flex items-end justify-between w-full mt-1">
                 <p className="text-base font-medium">{currency}{product.offerPrice}</p>
                 <button className=" max-sm:hidden px-4 py-1.5 text-gray-500 border border-gray-500/20 rounded-full text-xs hover:bg-slate-50 transition">
-                    Buy now
+                    Acheter maintenent
                 </button>
             </div>
         </div>

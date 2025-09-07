@@ -1,4 +1,4 @@
-import { addressDummyData } from "@/assets/assets";
+
 import { useAppContext } from "@/context/AppContext";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const OrderSummary = () => {
 
-  const { currency, router, getCartCount, getCartAmount, getToken, user, cartItems, setCartItems } = useAppContext()
+  const { currency, router, getCartCount, getCartAmount, getToken, user, cartItems, setCartItems, products } = useAppContext()
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -19,25 +19,68 @@ const OrderSummary = () => {
       const { data } = await axios.get('/api/user/get-address', {
         headers: { Authorization: `Bearer ${token}` }
       });
-    if (data.success) {
-      setUserAddresses(data.addresses)
-      if (data.address.length > 0) {
-        setSelectedAddresses(data.addresses[0])
+      if (data.success) {
+        setUserAddresses(data.addresses)
+        if (data.addresses.length > 0) {
+          setSelectedAddress(data.addresses[0])
+        }
+      } else {
+        toast.error(data.message || "Failed to fetch addresses")
       }
-    } else {
-      toast.error(data.message || "Failed to fetch addresses")
+    } catch (error) {
+      toast.error(error.message || "Something went wrong while fetching addresses")
     }
-  } catch (error) {
-    toast.error(error.message || "Something went wrong while fetching addresses")
   }
-  }
+
   const handleAddressSelect = (address) => {
     setSelectedAddress(address);
     setIsDropdownOpen(false);
   };
 
   const createOrder = async () => {
+    try {
 
+      if (!selectedAddress) {
+        return toast.error('Please select an address')
+      }
+
+      // Filtrer les éléments du panier pour ne garder que ceux avec des IDs valides
+      let cartItemsArray = Object.keys(cartItems)
+        .filter(key => {
+          // Vérifier que l'ID est un ObjectId MongoDB valide (24 caractères hexadécimaux)
+          const isValidId = /^[0-9a-fA-F]{24}$/.test(key);
+          if (!isValidId) {
+            console.warn(`Removing invalid product ID from cart: ${key}`);
+          }
+          return isValidId && cartItems[key] > 0;
+        })
+        .map((key) => ({ product: key, quantity: cartItems[key] }));
+
+      if (cartItemsArray.length === 0) {
+        return toast.error('Your cart is empty or contains invalid items')
+      }
+
+      const token = await getToken()
+
+      const { data } = await axios.post('/api/order/create', {
+        address: selectedAddress._id,
+        items: cartItemsArray
+
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+
+      })
+
+      if (data.success) {
+        toast.success(data.message)
+        setCartItems({})
+        router.push('/order-placed')
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
   }
 
   useEffect(() => {
@@ -49,13 +92,13 @@ const OrderSummary = () => {
   return (
     <div className="w-full md:w-96 bg-gray-500/5 p-5">
       <h2 className="text-xl md:text-2xl font-medium text-gray-700">
-        Order Summary
+        Résumé de la commande
       </h2>
       <hr className="border-gray-500/30 my-5" />
       <div className="space-y-6">
         <div>
           <label className="text-base font-medium uppercase text-gray-600 block mb-2">
-            Select Address
+            Sélectionner l’adresse
           </label>
           <div className="relative inline-block w-full text-sm border">
             <button
@@ -65,7 +108,7 @@ const OrderSummary = () => {
               <span>
                 {selectedAddress
                   ? `${selectedAddress.fullName}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.state}`
-                  : "Select Address"}
+                  : "Selectionner l'addresse"}
               </span>
               <svg className={`w-5 h-5 inline float-right transition-transform duration-200 ${isDropdownOpen ? "rotate-0" : "-rotate-90"}`}
                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280"
@@ -89,7 +132,7 @@ const OrderSummary = () => {
                   onClick={() => router.push("/add-address")}
                   className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer text-center"
                 >
-                  + Add New Address
+                  + Ajouter une nouvelle adresse
                 </li>
               </ul>
             )}
@@ -98,16 +141,16 @@ const OrderSummary = () => {
 
         <div>
           <label className="text-base font-medium uppercase text-gray-600 block mb-2">
-            Promo Code
+            Code promo
           </label>
           <div className="flex flex-col items-start gap-3">
             <input
               type="text"
-              placeholder="Enter promo code"
+              placeholder="Entrer le code promo"
               className="flex-grow w-full outline-none p-2.5 text-gray-600 border"
             />
             <button className="bg-orange-600 text-white px-9 py-2 hover:bg-orange-700">
-              Apply
+              Appliquer
             </button>
           </div>
         </div>
@@ -116,15 +159,15 @@ const OrderSummary = () => {
 
         <div className="space-y-4">
           <div className="flex justify-between text-base font-medium">
-            <p className="uppercase text-gray-600">Items {getCartCount()}</p>
+            <p className="uppercase text-gray-600">Articles {getCartCount()}</p>
             <p className="text-gray-800">{currency}{getCartAmount()}</p>
           </div>
           <div className="flex justify-between">
-            <p className="text-gray-600">Shipping Fee</p>
-            <p className="font-medium text-gray-800">Free</p>
+            <p className="text-gray-600">Frais de livraison</p>
+            <p className="font-medium text-gray-800">Livraison gratuite</p>
           </div>
           <div className="flex justify-between">
-            <p className="text-gray-600">Tax (2%)</p>
+            <p className="text-gray-600">Taxe (2%)</p>
             <p className="font-medium text-gray-800">{currency}{Math.floor(getCartAmount() * 0.02)}</p>
           </div>
           <div className="flex justify-between text-lg md:text-xl font-medium border-t pt-3">
@@ -135,7 +178,7 @@ const OrderSummary = () => {
       </div>
 
       <button onClick={createOrder} className="w-full bg-orange-600 text-white py-3 mt-5 hover:bg-orange-700">
-        Place Order
+        Passer la commande
       </button>
     </div>
   );

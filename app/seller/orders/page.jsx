@@ -5,27 +5,45 @@ import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/seller/Footer";
 import Loading from "@/components/Loading";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Orders = () => {
 
-    const { currency } = useAppContext();
+    const { currency, getToken, user } = useAppContext();
 
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchSellerOrders = async () => {
-        setOrders(orderDummyData);
-        setLoading(false);
+       try {
+
+        const token = await getToken()
+
+        const {data} = await axios.get('/api/order/seller-orders', { headers: { Authorization: `Bearer ${token}` } })
+
+        if (data.success) {
+            setOrders(data.orders)
+            setLoading(false)
+        } else {
+            toast.error(data.message || "Failed to fetch orders")
+        }
+        toast.error(error.message || "Something went wrong while fetching orders")
+       } catch (error) {
+
+       }
     }
 
     useEffect(() => {
+        if (user) {
         fetchSellerOrders();
-    }, []);
+        }
+    }, [user]);
 
     return (
         <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
             {loading ? <Loading /> : <div className="md:p-10 p-4 space-y-5">
-                <h2 className="text-lg font-medium">Orders</h2>
+                <h2 className="text-lg font-medium">commande</h2>
                 <div className="max-w-4xl rounded-md">
                     {orders.map((order, index) => (
                         <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-t border-gray-300">
@@ -56,9 +74,9 @@ const Orders = () => {
                             <p className="font-medium my-auto">{currency}{order.amount}</p>
                             <div>
                                 <p className="flex flex-col">
-                                    <span>Method : COD</span>
+                                    <span>Méthode de paiement : COD</span>
                                     <span>Date : {new Date(order.date).toLocaleDateString()}</span>
-                                    <span>Payment : Pending</span>
+                                    <span>Payement : En attente</span>
                                 </p>
                             </div>
                         </div>

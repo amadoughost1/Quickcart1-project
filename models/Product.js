@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 
-const ProductSchema = new mongoose.Schema({
-    userId: { type: String, required: true, ref: 'user' },
+const productSchema = new mongoose.Schema({
+    userId: { type: String, required: true, ref: "user" },
     name: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
@@ -12,7 +12,6 @@ const ProductSchema = new mongoose.Schema({
     date: { type: Number, required: true }
 })
 
-// Evite les doublons de modèle si rechargé
-const Product = mongoose.models.product || mongoose.model('product', ProductSchema)
+const Product = mongoose.models.product || mongoose.model('product', productSchema)
 
 export default Product
