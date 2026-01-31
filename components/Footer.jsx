@@ -16,32 +16,12 @@ const Footer = () => {
           </p>
         </div>
 
-        <div className="w-1/2 flex items-center justify-start md:justify-center">
-          <div>
-            <h2 className="font-medium text-gray-900 mb-5">Entreprise</h2>
-            <ul className="text-sm space-y-2">
-              <li>
-                <a className="hover:underline transition" href="#">Accueil</a>
-              </li>
-              <li>
-                <a className="hover:underline transition" href="#">À propos</a>
-              </li>
-              <li>
-                <a className="hover:underline transition" href="#">Contact</a>
-              </li>
-              <li>
-                <a className="hover:underline transition" href="#">Politique de confidentialité</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
         <div className="w-1/2 flex items-start justify-start md:justify-center">
           <div>
             <h2 className="font-medium text-gray-900 mb-5">Contactez-nous</h2>
             <div className="text-sm space-y-2">
               <p>+221776417418</p>
-              <p>amadougayeniang@gmail.com</p>
+              <p>contact@senshop.com</p>
             </div>
           </div>
         </div>

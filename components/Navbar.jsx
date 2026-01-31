@@ -26,10 +26,10 @@ const Navbar = () => {
         <Link href="/all-products" className="hover:text-gray-900 transition">
           Boutique
         </Link>
-        <Link href="/" className="hover:text-gray-900 transition">
+        <Link href="/about" className="hover:text-gray-900 transition">
           À propos
         </Link>
-        <Link href="/" className="hover:text-gray-900 transition">
+        <Link href="/contact" className="hover:text-gray-900 transition">
           Contact
         </Link>
 
